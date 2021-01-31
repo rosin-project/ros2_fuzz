@@ -1,5 +1,4 @@
 # Automatic fuzzing
-![Docker Image CI](https://github.com/JnxF/automatic_fuzzing/workflows/Docker%20Image%20CI/badge.svg)
 ![Hits](https://visitor-badge.glitch.me/badge?page_id=jnxf._automatic_fuzzing)
 [![GitHub stars](https://img.shields.io/github/stars/JnxF/automatic_fuzzing.svg)](https://GitHub.com/JnxF/automatic_fuzzing/stargazers/)
 [![GitHub forks](https://img.shields.io/github/forks/JnxF/automatic_fuzzing.svg)](https://GitHub.com/JnxF/automatic_fuzzing/network/)
