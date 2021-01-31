@@ -5,9 +5,11 @@ ENV ROSDIST foxy
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN /bin/bash -c "source /opt/ros/${ROSDIST}/setup.bash"
-RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
+
+# GitHub CI/CD complains if apt-utils is not installed:
+# https://github.com/phusion/baseimage-docker/issues/319#issuecomment-573368959
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends apt-utils && \
+    apt-get install -y apt-utils 2>&1 | grep -v "debconf: delaying package configuration, since apt-utils is not installed" && \
     apt-get install -y --no-install-recommends ros-foxy-example-interfaces
 
 ENV ROS_WS /opt/ros_ws
