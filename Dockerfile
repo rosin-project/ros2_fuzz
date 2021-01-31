@@ -5,9 +5,8 @@ ENV ROSDIST foxy
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN /bin/bash -c "source /opt/ros/${ROSDIST}/setup.bash"
-RUN /bin/bash -c "apt-get update && \ 
-                  apt-get install -y --no-install-recommends apt-utils 2>&1 && \ 
-                  apt-get install ros-foxy-example-interfaces -y"
+RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
+RUN apt-get update && apt-get install ros-foxy-example-interfaces -y
 
 ENV ROS_WS /opt/ros_ws
 WORKDIR $ROS_WS
