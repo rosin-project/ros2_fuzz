@@ -2,9 +2,10 @@ ARG ROSDIST=foxy
 FROM ros:$ROSDIST
 ENV ROSDIST foxy
 
-ARG DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND noninteractive
 
 RUN /bin/bash -c "source /opt/ros/${ROSDIST}/setup.bash"
+RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
 RUN apt-get update && \
     apt-get install -y --no-install-recommends apt-utils && \
     apt-get install -y --no-install-recommends ros-foxy-example-interfaces
