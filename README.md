@@ -13,6 +13,9 @@ Based on the [Creating custom ROS 2 msg and srv files](https://index.ros.org/doc
 
 Have Docker installed.
 
+## Dependencies
+[![](dependencies.png)](https://dreampuf.github.io/GraphvizOnline/#digraph%20G%20%7B%0A%20%20node%20%5Bshape%3Dbox%5D%3B%0A%20%20TypeParser%20-%3E%20FuzzTargetProcesser%20%5Blabel%3D%22ROSType%22%5D%3B%0A%20%20FuzzTargetProcesser%20-%3E%20TemplateGenerator%20%5Blabel%3D%22FuzzTarget%22%5D%3B%0A%20%20TemplateGenerator%20-%3E%20%22%20%22%20%5Blabel%3D%22cpp%20file%22%5D%3B%0A%20%20%22%20%22%20%5Bshape%3Dnone%5D%3B%0A%7D)
+
 ## Usage
 
 ```
