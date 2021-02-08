@@ -20,7 +20,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pytest
-    - name: Test with pytest
+        pip install unittest
+    - name: Test with unittest
       run: |
-        cd type_splitter && pytest
+        cd type_splitter && python3 -m unittest discover .
