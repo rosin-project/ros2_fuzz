@@ -14,10 +14,13 @@ RUN apt-get update && \
 ENV ROS_WS /opt/ros_ws
 WORKDIR $ROS_WS
 RUN mkdir -pv $ROS_WS/src
-COPY . src/
-RUN rm src/start.sh src/Dockerfile
+COPY ./automatic_fuzzing src/automatic_fuzzing/
+COPY ./tutorial_interfaces src/tutorial_interfaces/
+
 
 # RUN /bin/bash -c "apt-get update && rosdep install -i --from-path src --rosdistro ${ROSDIST} -y"
 
 # TODO: remove
 RUN /bin/bash -c "source /opt/ros/${ROSDIST}/setup.bash && colcon build"
+
+COPY ./type_splitter src/type_splitter/
