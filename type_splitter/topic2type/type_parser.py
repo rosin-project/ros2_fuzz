@@ -51,9 +51,6 @@ class ROSType:
 
 
 class TypeParser:
-
-    PREPATH = "tutorial_interfaces/srv/"
-
     PRIMITIVES = {
         "bool",
         "byte",
@@ -103,24 +100,46 @@ class TypeParser:
         return Field(name=name, type=type, options=options)
 
     @staticmethod
-    def parse(type_name: str) -> ROSType:
+    def parse(type_name: str, prepath: str = "") -> Optional[ROSType]:
         # Base case
         if type_name in TypeParser.PRIMITIVES:
             return ROSType(type_name=type_name, is_primitive=True)
 
         # Recursive case
+        full_topic_path = prepath + type_name
         try:
-            ros_interface_output = subprocess.check_output(
-                ["ros2", "interface", "show", TypeParser.PREPATH + type_name]
+            ros2_process_result = subprocess.check_output(
+                ["ros2", "interface", "show", full_topic_path],
+                stderr=subprocess.STDOUT,
             )
         except:
             logging.error(
-                f"Couldn't call ros2 interface show {TypeParser.PREPATH + type_name}",
-                exc_info=True,
+                f"Couldn't call `ros2 interface show {full_topic_path}`\n"
+                "Have you sourced install/setup.bash?"
             )
             return None
 
-        ros_interface_output = ros_interface_output.decode("utf-8").splitlines()
-        fields = [TypeParser.line2field(line) for line in ros_interface_output]
+        ros2_process_result = ros2_process_result.decode("utf-8")
+
+        # If it is a *.srv file content (request --- response),
+        # isolate and process only the request part
+        if "---" in ros2_process_result:
+            ros2_process_result = ros2_process_result.split("---")[0]
+        ros2_process_result = ros2_process_result.splitlines()
+        fields = [TypeParser.line2field(line) for line in ros2_process_result]
         fields = [field for field in fields if field is not None]
         return ROSType(type_name=type_name, fields=fields)
+
+    @staticmethod
+    def parse_topic(topic_name: str) -> Optional[ROSType]:
+        if "/" not in topic_name:
+            logging.error(
+                f"The topic name `{topic_name}` does not contain any slash (/).\n"
+                f'Please write the whole path (i.e. "tutorial_interfaces/srv/AddThreeInts")'
+            )
+            return None
+
+        prepath, type_name = topic_name.rsplit("/", 1)
+        prepath += "/"
+
+        return TypeParser.parse(type_name=type_name, prepath=prepath)
