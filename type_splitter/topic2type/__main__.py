@@ -1,9 +1,11 @@
-from .type_parser import *
-from .template_generator import *
-from .fuzzing_descriptor import *
 import sys
 import argparse
 import logging
+import os
+from .type_parser import *
+from .template_generator import *
+from .fuzzing_descriptor import *
+
 
 def main():
     # Argument parser
@@ -16,9 +18,12 @@ def main():
     parser.add_argument(
         "-v", "--verbose", help="increase output verbosity", action="store_true"
     )
+    parser.add_argument("-p", "--path", help="source code path", default=os.getcwd())
+
     args = parser.parse_args()
     topic_name = args.topic_name
     is_verbose = args.verbose
+    destination_path = args.path
 
     # Change logging
     if is_verbose:
@@ -35,4 +40,6 @@ def main():
         sys.exit()
 
     # 3. Generate the cpp file
-    TemplateGenerator.generate_cpp_file(fuzz_target)
+    TemplateGenerator.generate_cpp_file(
+        fuzz_target=fuzz_target, destination_path=destination_path
+    )

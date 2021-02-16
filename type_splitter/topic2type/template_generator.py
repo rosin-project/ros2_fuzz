@@ -1,19 +1,11 @@
-from .type_parser import Field, ROSType
-from .fuzzing_descriptor import FuzzTargetProcesser, FuzzTarget
 import os
 import logging
-
+from .type_parser import Field, ROSType
+from .fuzzing_descriptor import FuzzTargetProcesser, FuzzTarget
 
 class TemplateGenerator:
-    PREAMBLE = """/*
- * This is an automatically generated file
- * Do not modify
- */
-
-"""
-
     @staticmethod
-    def generate_cpp_file(fields: FuzzTarget):
+    def generate_cpp_file(fuzz_target: FuzzTarget, destination_path : str):
         __location__ = os.path.realpath(
             os.path.join(os.getcwd(), os.path.dirname(__file__))
         )
@@ -25,14 +17,13 @@ class TemplateGenerator:
                 logging.info("Template read")
 
                 # Populate template
-                for key, value in fields.get_mapping().items():
+                for key, value in fuzz_target.get_mapping().items():
                     template = template.replace(key, value)
 
                 # Write the populated file
                 try:
-                    with open(os.path.join(__location__, "generated.cpp"), "w") as fd:
-                        logging.info(f"Template written with {fields.client_name} client")
-                        template = TemplateGenerator.PREAMBLE + template
+                    with open(os.path.join(destination_path, "generated.cpp"), "w") as fd:
+                        logging.info(f"Template written with {fuzz_target.client_name} client")
                         fd.write(template)
                 except Exception:
                     logging.error("Couldn't write generated file", exc_info=True)

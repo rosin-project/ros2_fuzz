@@ -16,6 +16,8 @@ setuptools.setup(
     entry_points={
         "console_scripts": ["ros2_automatic_fuzzer=topic2type.__main__:main"],
     },
+    package_data={"": ["*.cpp"]},
+    include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
