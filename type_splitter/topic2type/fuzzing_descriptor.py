@@ -1,7 +1,7 @@
 from __future__ import annotations
 import logging
-from .type_parser import ROSType, Field
 import re
+from .type_parser import ROSType, Field
 
 
 class FuzzTarget:
@@ -15,14 +15,32 @@ class FuzzTarget:
 
     def get_mapping(self) -> dict[str, str]:
         return {
-            "{{ IMPORTS }}": self.imports,
-            "{{ CLIENT_NAME }}": self.client_name,
-            "{{ REQUEST_CODE }}": self.request_code,
-            "{{ NODE_TYPE }}": self.node_type,
+            "IMPORTS": self.imports,
+            "CLIENT_NAME": self.client_name,
+            "REQUEST_CODE": self.request_code,
+            "NODE_TYPE": self.node_type,
         }
 
 
 class FuzzTargetProcesser:
+    PRIMITIVES_CPP_TYPES = {
+        "bool": "bool",
+        "byte": "uint8_t",
+        "char": "char",
+        "float32": "float",
+        "float64": "double",
+        "int8": "int8_t",
+        "uint8": "uint8_t",
+        "int16": "int16_t",
+        "uint16": "uint16_t",
+        "int32": "int32_t",
+        "uint32": "uint32_t",
+        "int64": "int64_t",
+        "uint64": "uint64_t",
+        "string": "std::string",
+        "wstring": "std::string",
+    }
+
     def __init__(self) -> None:
         self.variable_counter = 0
 
@@ -40,12 +58,15 @@ class FuzzTargetProcesser:
         fresh = self.get_fresh_variable()
         preindent = "    " * indent
         res = preindent + f"// {field.name}\n"
-        res += preindent + f"{field.type.type_name} {fresh};\n"
+        
         # Primitive type
         if field.type.is_primitive:
+            cpp_type = FuzzTargetProcesser.PRIMITIVES_CPP_TYPES[field.type.type_name]
+            res += preindent + f"{cpp_type} {fresh};\n"
             res += preindent + f"get{field.type.type_name.capitalize()}({fresh});\n"
         # Composite type
         else:
+            res += preindent + f"{field.type.type_name} {fresh};\n"
             for subfield in field.type.fields:
                 res += preindent + self.fuzz_field(
                     subfield, parent=fresh, indent=indent + 1
