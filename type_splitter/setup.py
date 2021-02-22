@@ -13,6 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="TBD",
     packages=setuptools.find_packages(),
+    install_requires=['Jinja2'],
     entry_points={
         "console_scripts": ["ros2_automatic_fuzzer=topic2type.__main__:main"],
     },

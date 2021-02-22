@@ -2,14 +2,19 @@
  * This is an automatically generated file
  * Do not modify
  */
-
-#include "rclcpp/rclcpp.hpp"
-{{ IMPORTS }}
-//#include "tutorial_interfaces/srv/add_three_ints.hpp"
-
+#include <cstdint>
+#include <cstdlib>
 #include <chrono>
 #include <cstdlib>
 #include <memory>
+#include <string>
+
+#include "rclcpp/rclcpp.hpp"
+#include "fuzzing_api.hpp"
+{{ IMPORTS }}
+//#include "tutorial_interfaces/srv/add_three_ints.hpp"
+
+
 
 using namespace std::chrono_literals;
 
