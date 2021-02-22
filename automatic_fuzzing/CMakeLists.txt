@@ -16,9 +16,14 @@ ament_target_dependencies(client
   rclcpp #example_interfaces) CHANGE
          tutorial_interfaces) 
 
+# ADDED FOR FUZZING 
+add_executable(fuzzer_device src/generated.cpp)
+ament_target_dependencies(fuzzer_device rclcpp tutorial_interfaces) 
+
 install(TARGETS
   server
   client
+  fuzzer_device
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()

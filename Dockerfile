@@ -28,3 +28,4 @@ RUN /bin/bash -c "source /opt/ros/${ROSDIST}/setup.bash && colcon build"
 COPY ./type_splitter src/type_splitter/
 
 RUN pip3 install src/type_splitter/
+RUN rm -rf src/type_splitter/
