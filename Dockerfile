@@ -11,7 +11,8 @@ RUN apt-get update && \
     apt-get install -y apt-utils 2>&1 | grep -v "debconf: delaying package configuration, since apt-utils is not installed" && \
     apt-get install -y --no-install-recommends ros-foxy-example-interfaces && \
     apt-get install -y vim && \
-    apt-get install -y python3-pip
+    apt-get install -y python3-pip && \
+    apt-get install -y afl++
 
 ENV ROS_WS /opt/ros_ws
 WORKDIR $ROS_WS
