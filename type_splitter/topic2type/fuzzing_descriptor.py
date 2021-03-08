@@ -58,12 +58,15 @@ class FuzzTargetProcesser:
         fresh = self.get_fresh_variable()
         preindent = "    " * indent
         res = preindent + f"// {field.name}\n"
-        
+
         # Primitive type
         if field.type.is_primitive:
             cpp_type = FuzzTargetProcesser.PRIMITIVES_CPP_TYPES[field.type.type_name]
             res += preindent + f"{cpp_type} {fresh};\n"
-            res += preindent + f"get{field.type.type_name.capitalize()}({fresh});\n"
+            res += (
+                preindent
+                + f"if (!get{field.type.type_name.capitalize()}({fresh})) return;\n"
+            )
         # Composite type
         else:
             res += preindent + f"{field.type.type_name} {fresh};\n"
@@ -76,10 +79,16 @@ class FuzzTargetProcesser:
 
     def process(self, t: ROSType) -> FuzzTarget:
         logging.info(f"Processing {t.type_name} type")
+        imports = "\n".join(
+            [
+                '#include "tutorial_interfaces/srv/add_three_ints.hpp"',
+                '#include "add_two_ints_server.cpp"',
+            ]
+        )
         request_code = "\n".join([self.fuzz_field(field) for field in t.fields])
 
         return FuzzTarget(
-            imports='#include "tutorial_interfaces/srv/add_three_ints.hpp"',
+            imports=imports,
             client_name=FuzzTargetProcesser.normalize_client_name(t.type_name),
             request_code=request_code,
             node_type="tutorial_interfaces::srv::AddThreeInts",

@@ -13,17 +13,21 @@ def main():
         prog="ros2_automatic_fuzzer", description="ROS 2 automatic topic fuzzer"
     )
     parser.add_argument(
-        "topic_name", help='topic name (i.e. "tutorial_interfaces/srv/AddThreeInts")'
+        "topic_name",
+        help='full topic name (i.e. "tutorial_interfaces/srv/AddThreeInts")',
+    )
+    parser.add_argument(
+        "source_file",
+        help='source file where the server is defined (i.e. "addtwointsserver.cpp")',
     )
     parser.add_argument(
         "-v", "--verbose", help="increase output verbosity", action="store_true"
     )
-    parser.add_argument("-p", "--path", help="source code path", default=os.getcwd())
 
     args = parser.parse_args()
     topic_name = args.topic_name
+    source_file = args.source_file
     is_verbose = args.verbose
-    destination_path = args.path
 
     # Change logging
     if is_verbose:
@@ -41,5 +45,6 @@ def main():
 
     # 3. Generate the cpp file
     TemplateGenerator.generate_cpp_file(
-        fuzz_target=fuzz_target, destination_path=destination_path
+        fuzz_target=fuzz_target,
+        source_file=source_file,
     )
