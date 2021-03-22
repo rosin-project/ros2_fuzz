@@ -1,16 +1,17 @@
-import sys
 import argparse
 import logging
 import os
-from .type_parser import *
-from .template_generator import *
+import sys
+
 from .fuzzing_descriptor import *
+from .template_generator import *
+from .type_parser import *
 
 
 def main():
     # Argument parser
     parser = argparse.ArgumentParser(
-        prog="ros2_automatic_fuzzer", description="ROS 2 automatic topic fuzzer"
+        prog="service_fuzzer", description="ROS 2 automatic topic fuzzer"
     )
     parser.add_argument(
         "topic_name",
