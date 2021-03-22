@@ -11,11 +11,15 @@ setuptools.setup(
     description="An automatic ROS 2 topic fuzzer",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="TBD",
+    url="TODO",
     packages=setuptools.find_packages(),
     install_requires=["Jinja2"],
     entry_points={
-        "console_scripts": ["service_fuzzer=service_fuzzer.__main__:main"],
+        "console_scripts": [
+            "topic_fuzzer=topic_fuzzer.__main__:main",
+            "service_fuzzer=service_fuzzer.__main__:main",
+            "parameters_fuzzer=parameters_fuzzer.__main__:main",
+        ],
     },
     package_data={"": ["*.cpp"]},
     include_package_data=True,
