@@ -5,7 +5,7 @@ import sys
 
 from .fuzzing_descriptor import *
 from .template_generator import *
-from .type_parser import *
+from .type_parser import TypeParser
 
 
 def main():

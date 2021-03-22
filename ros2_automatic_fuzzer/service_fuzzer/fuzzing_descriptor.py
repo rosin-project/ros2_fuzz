@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 import logging
 import re
-from .type_parser import ROSType, Field
+
+from .type_parser import Field, ROSType
 
 
 class FuzzTarget:

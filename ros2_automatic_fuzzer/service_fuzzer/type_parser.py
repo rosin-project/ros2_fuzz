@@ -1,7 +1,8 @@
 from __future__ import annotations
-import subprocess
-import re
+
 import logging
+import re
+import subprocess
 from typing import Optional
 
 
