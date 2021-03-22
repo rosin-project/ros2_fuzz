@@ -1,5 +1,5 @@
-import unittest
 import os
+import unittest
 
 from topic2type.type_parser import TypeParser
 
@@ -10,14 +10,14 @@ class TypeParserTests(unittest.TestCase):
         return os.path.join(os.path.dirname(os.path.abspath(__file__)), path)
 
     def test_positive_tests(self):
-        with open(self.relative_file("positive_tests.txt")) as f:
+        with open(self.relative_file("type_parser_positive_tests.txt")) as f:
             positive_tests = f.readlines()
         for field in positive_tests:
             with self.subTest(field=field):
                 self.assertIsNotNone(TypeParser.line2field(field))
 
     def test_negative_tests(self):
-        with open(self.relative_file("negative_tests.txt")) as f:
+        with open(self.relative_file("type_parser_negative_tests.txt")) as f:
             negative_tests = f.readlines()
         for field in negative_tests:
             with self.subTest(field=field):
