@@ -23,18 +23,18 @@ ENV ROS_WS /opt/ros_ws
 WORKDIR $ROS_WS
 RUN mkdir -pv $ROS_WS/src
 
-COPY ./automatic_fuzzing src/automatic_fuzzing/
-COPY ./tutorial_interfaces src/tutorial_interfaces/
-COPY ./parameters_example_package src/parameters_example_package/
-COPY ./geometry2 src/geometry2/
-
+# Copy packages
+COPY ./example_packages/automatic_fuzzing src/automatic_fuzzing/
+COPY ./example_packages/tutorial_interfaces src/tutorial_interfaces/
+COPY ./example_packages/parameters_example_package src/parameters_example_package/
+# COPY ./example_packages/geometry2 src/geometry2/
 
 # RUN /bin/bash -c "apt-get update && rosdep install -i --from-path src --rosdistro ${ROSDIST} -y"
 
 # TODO: remove
-RUN /bin/bash -c "source /opt/ros/${ROSDIST}/setup.bash && colcon build --packages-select parameters_example_package automatic_fuzzing tutorial_interfaces"
+RUN /bin/bash -c "source /opt/ros/${ROSDIST}/setup.bash && colcon build"
 
+# Copy the python package, install it and erase the source files
 COPY ./ros2_automatic_fuzzer src/ros2_automatic_fuzzer/
-
 RUN pip3 install -e src/ros2_automatic_fuzzer/
-#RUN rm -rf src/ros2_automatic_fuzzer/
+RUN rm -rf src/ros2_automatic_fuzzer/
