@@ -18,6 +18,6 @@ jobs:
       with:
         python-version: "3.9"
     - name: Test with unittest
-      run: python3 -m unittest discover type_splitter
+      run: python3 ros2_automatic_fuzzer/setup.py test
     - name: Compile all
       run: python3 -m compileall
