@@ -37,4 +37,4 @@ RUN /bin/bash -c "source /opt/ros/${ROSDIST}/setup.bash && colcon build"
 # Copy the python package, install it and erase the source files
 COPY ./ros2_automatic_fuzzer src/ros2_automatic_fuzzer/
 RUN pip3 install -e src/ros2_automatic_fuzzer/
-RUN rm -rf src/ros2_automatic_fuzzer/
+# RUN rm -rf src/ros2_automatic_fuzzer/

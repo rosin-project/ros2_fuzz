@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "topics": {
+      "type": "object",
+      "properties": {
+        "topic": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "headers_file": {
+              "type": "string"
+            },
+            "source": {
+              "type": "string"
+            },
+            "node_name": {
+              "type": "string"
+            },
+            "parameters": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          },
+          "required": ["type", "headers_file", "source"]
+        }
+      }
+    },
+    "services": {
+      "type": "object",
+      "properties": {
+        "add_two_ints": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "headers_file": {
+              "type": "string"
+            },
+            "source": {
+              "type": "string"
+            }
+          },
+          "required": ["type", "headers_file", "source"]
+        }
+      }
+    }
+  },
+  "required": ["topics", "services"]
+}

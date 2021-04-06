@@ -13,12 +13,15 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="TODO",
     packages=setuptools.find_packages(),
-    install_requires=["Jinja2"],
+    install_requires=["Jinja2", "PyYAML", "jsonschema"],
+    zip_safe=False,  # TODO: remove
     entry_points={
         "console_scripts": [
             "topic_fuzzer=topic_fuzzer.__main__:main",
             "service_fuzzer=service_fuzzer.__main__:main",
             "parameters_fuzzer=parameters_fuzzer.__main__:main",
+            "yaml_parser=yaml_parser.__main__:main",
+            "auto_detecter=auto_detecter.__main__:main"
         ],
     },
     package_data={"": ["*.cpp"]},

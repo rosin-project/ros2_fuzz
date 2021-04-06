@@ -1,0 +1,21 @@
+services:
+  add_three_ints:
+    headers_file: TODO
+    node_name: TODO
+    parameters:
+      - "p : int64": 0.01
+    source: /opt/ros_ws/src/automatic_fuzzing/src/add_two_ints_server.cpp
+    type: tutorial_interfaces::srv::AddThreeInts
+  add_two_ints:
+    headers_file: TODO
+    node_name: TODO
+    parameters: []
+    source: /opt/ros_ws/src/parameters_example_package/src/add_two_ints_server.cpp
+    type: example_interfaces::srv::AddTwoInts
+topics:
+  topic:
+    headers_file: TODO
+    node_name: TODO
+    parameters: []
+    source: /opt/ros_ws/src/parameters_example_package/src/fuzz_target.cpp
+    type: std_msgs::msg::String
