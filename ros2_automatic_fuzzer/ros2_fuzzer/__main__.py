@@ -7,7 +7,6 @@ import yamale
 
 
 def usage() -> str:
-    # Argument parser
     parser = argparse.ArgumentParser(
         prog="ros2_fuzzer", description="ROS 2 automatic fuzzer"
     )
@@ -21,13 +20,7 @@ def usage() -> str:
 
     args = parser.parse_args()
     path = args.path if args.path else os.getcwd()
-    is_verbose = args.verbose
-
-    # Change logging
-    if is_verbose:
-        logging.basicConfig(level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO)
 
     return path
 
@@ -42,7 +35,8 @@ def ensure_yaml_exists(yaml_file_path: str) -> bool:
 
 
 def read_schema_file():
-    schema = yamale.make_schema("./schema.yaml")
+    yaml_path = os.path.join(os.path.dirname(__file__), "schema.yaml")
+    schema = yamale.make_schema(yaml_path)
     logging.debug("YAML schema read")
     return schema
 
@@ -62,8 +56,8 @@ def verify_yaml_file(yaml_file_path: str):
     schema = read_schema_file()
     yaml_objs = read_yaml_file(yaml_file_path)
     validate_yaml(yaml_objs, schema)
-    # yaml_obj contains a list of (object, path)
-    # for each read yaml file
+    # yaml_obj is a list of (object, path)
+    # so we return the first item's object
     return yaml_objs[0][0]
 
 
