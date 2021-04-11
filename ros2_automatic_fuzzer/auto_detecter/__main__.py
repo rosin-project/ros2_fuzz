@@ -2,21 +2,48 @@ import os
 import logging
 import re
 import yaml
+import argparse
+
+
+def usage():
+    parser = argparse.ArgumentParser(
+        prog="auto_detecter", description="ROS 2 detecter artifact"
+    )
+    parser.add_argument(
+        "--path",
+        help="Path where ROS artifacts are found",
+    )
+    parser.add_argument(
+        "-v", "--verbose", help="increase output verbosity", action="store_true"
+    )
+    parser.add_argument(
+        "-f", "--overwrite", help="forces overwrite", action="store_true"
+    )
+
+    args = parser.parse_args()
+    path = args.path if args.path else os.getcwd()
+    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO)
+
+    return path, args.overwrite
 
 
 def main():
-    # TODO: remove
-    logging.basicConfig(level=logging.DEBUG)
+    rootDir, overwrite = usage()
+    yaml_path = os.path.join(rootDir, "fuzz.yaml")
 
-    logging.info("Starting directory exploration")
+    if os.path.exists(yaml_path) and not overwrite:
+        logging.error("The file fuzz.yaml already exists")
+        logging.error("Use the -f flag to force overwriting")
+        exit(-1)
+
+    logging.debug("Starting directory exploration")
     cppfiles = []
-    rootDir = os.getcwd()
     for dirName, subdirList, fileList in os.walk(rootDir):
         for fname in fileList:
             if fname.endswith("cpp"):
                 cppfiles.append(os.path.join(dirName, fname))
 
-    logging.info(f"Logged {len(cppfiles)} .cpp files")
+    logging.debug(f"Logged {len(cppfiles)} .cpp files")
     for file in cppfiles:
         logging.debug(f"\t {file}")
 
@@ -32,32 +59,44 @@ def main():
         r"create_service\s*<\s*(?P<type>[^>]+)\s*>\s*\(\s*\"(?P<name>[^\"]+)\""
     )
 
-    logging.info("Checking file contents")
+    logging.debug("Checking file contents")
     found_publishers = dict()
     found_services = dict()
     for filepath in cppfiles:
-        with open(filepath) as f:
-            contents = f.read()
-            for (regex, container) in [
-                (create_publisher_regex, found_publishers),
-                (create_service_regex, found_services),
-            ]:
-                instance = re.search(regex, contents)
-                if instance:
-                    container[instance.group("name")] = {
-                        "type": instance.group("type"),
-                        "headers_file": "TODO",
-                        "source": filepath,
-                        "node_name": "TODO",
-                        "parameters": [],
-                    }
+        try:
+            with open(filepath) as f:
+                contents = f.read()
+                for (regex, container) in [
+                    (create_publisher_regex, found_publishers),
+                    (create_service_regex, found_services),
+                ]:
+                    instance = re.search(regex, contents)
+                    if instance:
+                        container[instance.group("name")] = {
+                            "headers_file": "TODO",
+                            "node_name": "TODO",
+                            "source": filepath,
+                            "type": instance.group("type"),
+                            "parameters": [],
+                        }
+        except:
+            pass
 
-    logging.info("Writing YAML file")
-    yaml_result = {
-        "topics": found_publishers,
-        "services": found_services
-    }
-    with open('generated.yaml', 'w') as outfile:
-        yaml.dump(yaml_result, outfile)
-    
-    logging.info("Written YAML file")
+    # Generate results
+    yaml_result = {"topics": found_publishers, "services": found_services}
+
+    if len(found_publishers) + len(found_services) == 0:
+        logging.error(
+            "No publisher nor service has been found\n"
+            "Are you in (or have you provided) the correct path?"
+        )
+        exit(-1)
+
+    if os.path.exists(yaml_path) and overwrite:
+        logging.warning("Overwriting the fuzz.yaml file")
+
+    with open(yaml_path, "w") as outfile:
+        yaml.dump(yaml_result, outfile, sort_keys=False)
+
+    logging.info("The file `fuzz.yaml` has been generated")
+    logging.info("Please fill the TODOs accordingly before start fuzzing")
