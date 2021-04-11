@@ -17,7 +17,7 @@ setuptools.setup(
     zip_safe=False,  # TODO: remove
     entry_points={
         "console_scripts": [
-            "auto_detecter=auto_detecter.__main__:main",
+            "auto_detector=auto_detector.__main__:main",
             "ros2_fuzzer=ros2_fuzzer.__main__:main",
             "topic_fuzzer=topic_fuzzer.__main__:main",
             "service_fuzzer=service_fuzzer.__main__:main",

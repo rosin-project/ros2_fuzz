@@ -75,7 +75,7 @@ def main():
                         container[instance.group("name")] = {
                             "headers_file": "TODO",
                             "node_name": "TODO",
-                            "source": filepath,
+                            "source": os.path.relpath(filepath, start=rootDir),
                             "type": instance.group("type"),
                             "parameters": [],
                         }
