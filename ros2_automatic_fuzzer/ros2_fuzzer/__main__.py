@@ -66,6 +66,12 @@ def read_and_validate_yaml_file(path: str) -> dict:
     ensure_yaml_exists(yaml_file_path)
     yaml_obj = verify_yaml_file(yaml_file_path)
 
+    if "TODO" in json.dumps(yaml_obj):
+        logging.warning(
+            "The 'TODO' keyword was found in the yaml file\n"
+            "Did you forget to fill in the blanks?"
+        )
+
     services: dict = yaml_obj["services"]
     topics: dict = yaml_obj["topics"]
     logging.info(
