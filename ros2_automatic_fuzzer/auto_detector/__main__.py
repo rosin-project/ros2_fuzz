@@ -7,17 +7,17 @@ import argparse
 
 def usage():
     parser = argparse.ArgumentParser(
-        prog="auto_detecter", description="ROS 2 detecter artifact"
+        prog="auto_detector", description="Automatic C++ ROS 2 components finder"
     )
     parser.add_argument(
         "--path",
-        help="Path where ROS artifacts are found",
-    )
-    parser.add_argument(
-        "-v", "--verbose", help="increase output verbosity", action="store_true"
+        help="path to search for ROS artifacts (default = the working directory)",
     )
     parser.add_argument(
         "-f", "--overwrite", help="forces overwrite", action="store_true"
+    )
+    parser.add_argument(
+        "-v", "--verbose", help="increase output verbosity", action="store_true"
     )
 
     args = parser.parse_args()
