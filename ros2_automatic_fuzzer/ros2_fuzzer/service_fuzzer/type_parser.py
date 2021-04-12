@@ -101,7 +101,7 @@ class TypeParser:
         return Field(name=name, type=type, options=options)
 
     @staticmethod
-    def parse(type_name: str, prepath: str = "") -> Optional[ROSType]:
+    def parse(type_name: str, prepath: str = "") -> ROSType:
         # Base case
         if type_name in TypeParser.PRIMITIVES:
             return ROSType(type_name=type_name, is_primitive=True)
@@ -118,7 +118,7 @@ class TypeParser:
                 f"Couldn't call `ros2 interface show {full_topic_path}`\n"
                 "Have you sourced install/setup.bash?"
             )
-            return None
+            exit(-1)
 
         ros2_process_result = ros2_process_result.decode("utf-8")
 
@@ -132,13 +132,13 @@ class TypeParser:
         return ROSType(type_name=type_name, fields=fields)
 
     @staticmethod
-    def parse_topic(topic_name: str) -> Optional[ROSType]:
+    def parse_topic(topic_name: str) -> ROSType:
         if "/" not in topic_name:
             logging.error(
                 f"The topic name `{topic_name}` does not contain any slash (/).\n"
                 f'Please write the whole path (i.e. "tutorial_interfaces/srv/AddThreeInts")'
             )
-            return None
+            exit(-1)
 
         prepath, type_name = topic_name.rsplit("/", 1)
         prepath += "/"

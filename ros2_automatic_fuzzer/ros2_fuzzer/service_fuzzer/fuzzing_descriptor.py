@@ -24,7 +24,7 @@ class FuzzTarget:
         }
 
 
-class FuzzTargetProcesser:
+class FuzzTargetProcessor:
     PRIMITIVES_CPP_TYPES = {
         "bool": "bool",
         "byte": "uint8_t",
@@ -56,14 +56,14 @@ class FuzzTargetProcesser:
         return re.sub(r"(?<!^)(?=[A-Z])", "_", raw_client_name).lower()
 
     def fuzz_field(self, field: Field, parent="request", indent=1) -> str:
-        logging.info(f"Generating field {field.name}")
+        logging.debug(f"Generating field {field.name}")
         fresh = self.get_fresh_variable()
         preindent = "    " * indent
         res = preindent + f"// {field.name}\n"
 
         # Primitive type
         if field.type.is_primitive:
-            cpp_type = FuzzTargetProcesser.PRIMITIVES_CPP_TYPES[field.type.type_name]
+            cpp_type = FuzzTargetProcessor.PRIMITIVES_CPP_TYPES[field.type.type_name]
             res += preindent + f"{cpp_type} {fresh};\n"
             res += (
                 preindent
@@ -79,19 +79,19 @@ class FuzzTargetProcesser:
         res += preindent + f"{parent}->{field.name} = {fresh};\n"
         return res
 
-    def process(self, t: ROSType) -> FuzzTarget:
-        logging.info(f"Processing {t.type_name} type")
+    def process(self, t: ROSType, headers_file: str, original_file: str) -> FuzzTarget:
+        logging.debug(f"Processing {t.type_name} type")
         imports = "\n".join(
             [
-                '#include "tutorial_interfaces/srv/add_three_ints.hpp"',
-                '#include "add_two_ints_server.cpp"',
+                f'#include "{headers_file}"',
+                f'#include "{original_file}"',
             ]
         )
         request_code = "\n".join([self.fuzz_field(field) for field in t.fields])
 
         return FuzzTarget(
             imports=imports,
-            client_name=FuzzTargetProcesser.normalize_client_name(t.type_name),
+            client_name=FuzzTargetProcessor.normalize_client_name(t.type_name),
             request_code=request_code,
             node_type="tutorial_interfaces::srv::AddThreeInts",
         )

@@ -13,13 +13,15 @@
 #include <unistd.h>
 
 #include "rclcpp/rclcpp.hpp"
-#include "fuzzing_api.hpp"
-
-{{ IMPORTS }}
 
 using namespace std::chrono_literals;
 
-void fuzz_target(int argc, char **argv)
+{{ IMPORTS }}
+
+{{ FUZZING_API }}
+
+
+void fuzz_target(int argc, char const *const argv[])
 {
     rclcpp::init(argc, argv);
 
@@ -84,7 +86,7 @@ static void __attribute__((constructor)) __injector_init()
         exit(-1);
     } else if (pid == 0) {
         int argc = 1;
-        char* argv[] = {"./my_fuzz_target", NULL};
+        const char* argv[] = {"./my_fuzz_target", NULL};
         fuzz_target(argc, argv);
 
         // Kill the parent

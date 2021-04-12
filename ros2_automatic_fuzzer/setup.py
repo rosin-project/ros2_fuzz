@@ -20,11 +20,10 @@ setuptools.setup(
             "auto_detector=auto_detector.__main__:main",
             "ros2_fuzzer=ros2_fuzzer.__main__:main",
             "topic_fuzzer=topic_fuzzer.__main__:main",
-            "service_fuzzer=service_fuzzer.__main__:main",
             "parameters_fuzzer=parameters_fuzzer.__main__:main",
         ],
     },
-    package_data={"": ["*.cpp"]},
+    package_data={"": ["*.cpp", "*.hpp", "*.yaml"]},
     include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
