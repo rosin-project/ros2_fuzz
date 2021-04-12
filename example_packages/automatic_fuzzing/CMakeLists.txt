@@ -6,18 +6,18 @@ find_package(rclcpp REQUIRED)
 # find_package(example_interfaces REQUIRED)
 find_package(tutorial_interfaces REQUIRED)        # CHANGE
 
-add_executable(server src/add_two_ints_server.cpp)
+add_executable(server src/add_three_ints_server.cpp)
 ament_target_dependencies(server
   rclcpp #example_interfaces) CHANGE
          tutorial_interfaces) 
 
-add_executable(client src/add_two_ints_client.cpp)
+add_executable(client src/add_three_ints_client.cpp)
 ament_target_dependencies(client
   rclcpp #example_interfaces) CHANGE
          tutorial_interfaces) 
 
 # ADDED FOR FUZZING 
-add_executable(generated_fuzzer src/add_two_ints_server_generated.cpp)
+add_executable(generated_fuzzer src/add_three_ints_server_generated.cpp)
 ament_target_dependencies(generated_fuzzer rclcpp tutorial_interfaces) 
 
 install(TARGETS

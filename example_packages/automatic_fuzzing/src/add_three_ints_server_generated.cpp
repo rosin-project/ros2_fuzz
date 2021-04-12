@@ -1,4 +1,3 @@
-#include "fuzzing_api.hpp"
 #include <iostream>
 
 int main() {
