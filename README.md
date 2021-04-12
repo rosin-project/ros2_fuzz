@@ -31,6 +31,39 @@ The tool comprises two different commands: `auto_detector` and `ros2_fuzzer`:
 3. Fill the missing `TODO`s in the generated `fuzz.yaml` file accordingly.
 4. Run `ros2_fuzzer` and follow the steps.
 
+## YAML format
+
+The `fuzz.yaml` file contains descriptions for topics, services and action servers.
+
+Some of the fields can be automatically extracted from the code, but others must be manually introduced. The blanks are marked with the `TODO` keyword.
+
+Follows a concrete example. The used syntax follows [the YAML schema](ros2_automatic_fuzzer/ros2_fuzzer/schema.yaml), which the `fuzz.yaml` file is meant to conform to.
+
+TODO
+
+```yaml
+topics:
+  topic:
+    headers_file: TODO
+    node_name: TODO
+    source: src/parameters_example_package/src/fuzz_target.cpp
+    type: std_msgs::msg::String
+    parameters: []
+services:
+  add_two_ints:
+    headers_file: TODO
+    node_name: TODO
+    source: src/parameters_example_package/src/add_two_ints_server.cpp
+    type: example_interfaces::srv::AddTwoInts
+    parameters: []
+  add_three_ints:
+    headers_file: tutorial_interfaces/srv/add_three_ints.hpp
+    node_name: TODO
+    source: src/automatic_fuzzing/src/add_three_ints_server.cpp
+    type: tutorial_interfaces::srv::AddThreeInts
+    parameters: []
+```
+
 ## CLIs
 
 ### `auto_detector`
