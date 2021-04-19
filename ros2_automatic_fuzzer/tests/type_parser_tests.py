@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from service_fuzzer.type_parser import TypeParser
+from ros2_fuzzer.service_fuzzer.type_parser import TypeParser
 
 
 class TypeParserTests(unittest.TestCase):
