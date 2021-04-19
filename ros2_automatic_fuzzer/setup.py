@@ -5,16 +5,15 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="ros2_automatic_fuzzer-jnxf",
-    version="0.0.1",
+    version="0.5.0",
     author="Francisco Martínez Lasaca, Zhoulai Fu, Andrzej Wąsowski",
     author_email="frml@itu.dk, zhfu@itu.dk, wasowski@itu.dk",
-    description="An automatic ROS 2 topic fuzzer",
+    description="An automatic ROS 2 fuzzer for C++ nodes",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="TODO",
+    url="https://github.com/JnxF/automatic_fuzzing",
     packages=setuptools.find_packages(),
     install_requires=["Jinja2", "yamale"],
-    zip_safe=False,  # TODO: remove
     entry_points={
         "console_scripts": [
             "auto_detector=auto_detector.__main__:main",

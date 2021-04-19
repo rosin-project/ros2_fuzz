@@ -1,12 +1,12 @@
 # Automatic fuzzing for ROS 2
 
-<!--![Python tests](https://github.com/JnxF/automatic_fuzzing/workflows/Python%20tests/badge.svg)
+![Python tests](https://github.com/JnxF/automatic_fuzzing/workflows/Python%20tests/badge.svg)
 ![Hits](https://visitor-badge.glitch.me/badge?page_id=jnxf._automatic_fuzzing)
 [![GitHub stars](https://img.shields.io/github/stars/JnxF/automatic_fuzzing.svg)](https://GitHub.com/JnxF/automatic_fuzzing/stargazers/)
 [![GitHub forks](https://img.shields.io/github/forks/JnxF/automatic_fuzzing.svg)](https://GitHub.com/JnxF/automatic_fuzzing/network/)
 [![GitHub repo size in bytes](https://img.shields.io/github/repo-size/JnxF/automatic_fuzzing.svg)](https://github.com/JnxF/automatic_fuzzing)
 [![GitHub contributors](https://img.shields.io/github/contributors/JnxF/automatic_fuzzing.svg)](https://GitHub.com/JnxF/automatic_fuzzing/graphs/contributors/)
-[![GitHub license](http://img.shields.io/github/license/JnxF/automatic_fuzzing.svg)](https://github.com/JnxF/automatic_fuzzing/blob/master/LICENSE)-->
+[![GitHub license](http://img.shields.io/github/license/JnxF/automatic_fuzzing.svg)](https://github.com/JnxF/automatic_fuzzing/blob/master/LICENSE)
 
 An automatic fuzzing tool for ROS 2 C++ projects.
 
@@ -18,17 +18,13 @@ TODO
 pip install ros2_fuzzer
 ```
 
-<!--
-## Dependencies
-[![](dependencies.png)](https://dreampuf.github.io/GraphvizOnline/#digraph%20G%20%7B%0A%20%20node%20%5Bshape%3Dbox%5D%3B%0A%20%20TypeParser%20-%3E%20FuzzTargetProcesser%20%5Blabel%3D%22ROSType%22%5D%3B%0A%20%20FuzzTargetProcesser%20-%3E%20TemplateGenerator%20%5Blabel%3D%22FuzzTarget%22%5D%3B%0A%20%20TemplateGenerator%20-%3E%20%22%20%22%20%5Blabel%3D%22cpp%20file%22%5D%3B%0A%20%20%22%20%22%20%5Bshape%3Dnone%5D%3B%0A%7D)-->
-
 ## Usage
 
 The tool comprises two different commands: `auto_detector` and `ros2_fuzzer`:
 
 1. Navigate to your ROS working space.
-2. Run `auto_detector`.
-3. Fill the missing `TODO`s in the generated `fuzz.yaml` file accordingly.
+2. Run `auto_detector`. This generates a `fuzz.yaml` file with `TODO` gaps.
+3. Fill the missing `TODO`s in the `fuzz.yaml` file accordingly.
 4. Run `ros2_fuzzer` and follow the steps.
 
 ## YAML format
@@ -37,7 +33,7 @@ The `fuzz.yaml` file contains descriptions for topics, services and action serve
 
 Some of the fields can be automatically extracted from the code, but others must be manually introduced. The blanks are marked with the `TODO` keyword.
 
-Follows a concrete example. The used syntax follows [the YAML schema](ros2_automatic_fuzzer/ros2_fuzzer/schema.yaml), which the `fuzz.yaml` file is meant to conform to.
+Follows a concrete example. The used syntax follows [the YAML schema](ros2_automatic_fuzzer/ros2_fuzzer/schema.yaml), which the `fuzz.yaml` file conforms to.
 
 TODO
 
