@@ -20,7 +20,6 @@ using namespace std::chrono_literals;
 
 {{ FUZZING_API }}
 
-
 void fuzz_target(int argc, char const *const argv[])
 {
     rclcpp::init(argc, argv);
@@ -35,7 +34,7 @@ void fuzz_target(int argc, char const *const argv[])
 
     /* START SINGLE ITERATION */
 
-    {{ REQUEST_CODE }}
+{{ REQUEST_CODE }}
 
     while (!client->wait_for_service(1s)) {
         if (!rclcpp::ok()) {

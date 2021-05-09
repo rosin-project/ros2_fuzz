@@ -1,0 +1,26 @@
+topics:
+  minimal_topic:
+    headers_file: std_msgs/msg/string.hpp
+    node_name: TODO
+    source: src/publisher_subscriber_example/src/publisher_member_function.cpp
+    type: std_msgs::msg::String
+    parameters: []
+  topic:
+    headers_file: std_msgs/msg/string.hpp
+    node_name: TODO
+    source: src/parameters_example_package/src/fuzz_target.cpp
+    type: std_msgs::msg::String
+    parameters: []
+services:
+  add_two_ints:
+    headers_file: example_interfaces/srv/add_two_ints.hpp
+    node_name: minimal_subscriber
+    source: src/parameters_example_package/src/add_two_ints_server.cpp
+    type: example_interfaces::srv::AddTwoInts
+    parameters: []
+  add_three_ints:
+    headers_file: tutorial_interfaces/srv/add_three_ints.hpp
+    node_name: TODO
+    source: src/client_service_example/src/add_three_ints_server.cpp
+    type: tutorial_interfaces::srv::AddThreeInts
+    parameters: []

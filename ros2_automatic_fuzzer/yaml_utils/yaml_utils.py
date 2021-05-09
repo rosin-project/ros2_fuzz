@@ -54,7 +54,7 @@ def read_and_validate_yaml_file(path: str) -> dict:
 
     services_keys = yaml_obj["services"].keys()
     topics_keys = yaml_obj["topics"].keys()
-    logging.info(f"{len(services_keys)} services detected: {', '.join(services_keys)}")
-    logging.info(f"{len(topics_keys)} topics detected: {', '.join(topics_keys)}")
+    logging.debug(f"{len(services_keys)} services detected: {', '.join([f'`{s}`' for s in services_keys])}")
+    logging.debug(f"{len(topics_keys)} topics detected: {', '.join([f'`{s}`' for s in topics_keys])}")
 
     return yaml_obj

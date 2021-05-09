@@ -33,7 +33,7 @@ The `fuzz.yaml` file contains descriptions for topics, services and action serve
 
 Some of the fields can be automatically extracted from the code, but others must be manually introduced. The blanks are marked with the `TODO` keyword.
 
-Follows a concrete example. The used syntax follows [the YAML schema](ros2_automatic_fuzzer/ros2_fuzzer/schema.yaml), which the `fuzz.yaml` file conforms to.
+Follows a concrete example. The used syntax follows [the YAML schema](ros2_automatic_fuzzer/yaml_utils/schema.yaml), which the `fuzz.yaml` file conforms to.
 
 TODO
 

@@ -132,15 +132,15 @@ class TypeParser:
         return ROSType(type_name=type_name, fields=fields)
 
     @staticmethod
-    def parse_topic(topic_name: str) -> ROSType:
-        if "/" not in topic_name:
+    def parse_type(type_name: str) -> ROSType:
+        if "/" not in type_name:
             logging.error(
-                f"The topic name `{topic_name}` does not contain any slash (/).\n"
+                f"The type name `{type_name}` does not contain any slash (/).\n"
                 f'Please write the whole path (i.e. "tutorial_interfaces/srv/AddThreeInts")'
             )
             exit(-1)
 
-        prepath, type_name = topic_name.rsplit("/", 1)
+        prepath, type_name = type_name.rsplit("/", 1)
         prepath += "/"
 
         return TypeParser.parse(type_name=type_name, prepath=prepath)

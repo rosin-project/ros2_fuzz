@@ -24,9 +24,13 @@ WORKDIR $ROS_WS
 RUN mkdir -pv $ROS_WS/src
 
 # Copy packages
-COPY ./example_packages/automatic_fuzzing src/automatic_fuzzing/
+COPY ./example_packages/client_service_example src/client_service_example/
 COPY ./example_packages/tutorial_interfaces src/tutorial_interfaces/
 COPY ./example_packages/parameters_example_package src/parameters_example_package/
+COPY ./example_packages/cpp_parameters src/cpp_parameters/
+COPY ./example_packages/publisher_subscriber_example src/publisher_subscriber_example/
+
+COPY ./example_packages/example_fuzz.yaml ./fuzz.yaml
 # COPY ./example_packages/geometry2 src/geometry2/
 
 # RUN /bin/bash -c "apt-get update && rosdep install -i --from-path src --rosdistro ${ROSDIST} -y"

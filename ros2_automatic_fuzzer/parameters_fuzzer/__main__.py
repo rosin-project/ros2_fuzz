@@ -7,7 +7,7 @@ import subprocess
 import time
 
 
-def get_parameters(package_name: str, executable_name: str):
+def get_parameters(node_name: str, package_name: str, executable_name: str):
     # Fork the execution
     # - The child starts the node in the background with "ros2 run _____"
     # - The parent waits a bit and starts getting the parameters
@@ -26,7 +26,9 @@ def get_parameters(package_name: str, executable_name: str):
         # ros2 param list
         try:
             ros2_param_result = subprocess.check_output(
-                ["ros2", "param", "list"], stderr=subprocess.STDOUT, encoding="utf8"
+                ["ros2", "param", "list", node_name],
+                stderr=subprocess.STDOUT,
+                encoding="utf8",
             )
         except:
             logging.error(f"Couldn't run `ros2 param list`\n")
@@ -34,13 +36,10 @@ def get_parameters(package_name: str, executable_name: str):
             os._exit(0)
 
         # If it is empty, something wrong happened
-        if ros2_param_result.strip() == "":
-            logging.error(f"`ros2 param list` is empty\n" "Is your node running? ")
+        if "Node not found" in ros2_param_result:
+            logging.error(f"The node `{node_name}` is not found.")
 
-        ros2_param_result = ros2_param_result.splitlines()
-        node_name = ros2_param_result[0].strip("/:")
-        ros2_param_result = ros2_param_result[1:]
-        ros2_param_result = [param.strip() for param in ros2_param_result]
+        ros2_param_result = [param.strip() for param in ros2_param_result.splitlines()]
 
         # Iterate through every parameter
         logging.info("Gathering parameters info")
@@ -52,6 +51,7 @@ def get_parameters(package_name: str, executable_name: str):
                 stderr=subprocess.STDOUT,
                 encoding="utf-8",
             )
+            print(["ros2", "param", "describe", node_name, param])
             type = re.search(
                 "Type:\s+([^\n]+)",
                 param_info,
@@ -80,7 +80,7 @@ def get_parameters(package_name: str, executable_name: str):
 
         except:
             logging.error(
-                f"`ros2 run has ended abrubtly`\n"
+                f"`ros2 run {package_name} {executable_name}` has ended abrubtly\n"
                 "Have you sourced install/setup.bash?"
             )
             os.kill(parent_pid, signal.SIGKILL)
@@ -93,18 +93,23 @@ def main():
         prog="parameters_fuzzer", description="ROS 2 automatic parameters fuzzer"
     )
     parser.add_argument(
+        "node_name",
+        help='(i.e. "minimal_subscriber")',
+    )
+    parser.add_argument(
         "package_name",
         help='(i.e. "mypackage")',
     )
     parser.add_argument(
         "executable_name",
-        help='(i.e. "minimal_subscriber")',
+        help='(i.e. "listener")',
     )
     parser.add_argument(
         "-v", "--verbose", help="increase output verbosity", action="store_true"
     )
 
     args = parser.parse_args()
+    node_name = args.node_name
     package_name = args.package_name
     executable_name = args.executable_name
     is_verbose = args.verbose
@@ -115,7 +120,7 @@ def main():
 
     # 1. Get parameters
     parameters = get_parameters(
-        package_name=package_name, executable_name=executable_name
+        node_name=node_name, package_name=package_name, executable_name=executable_name
     )
     print(parameters)
 

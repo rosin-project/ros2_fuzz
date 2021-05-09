@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(automatic_fuzzing)
+project(client_service_example)
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)

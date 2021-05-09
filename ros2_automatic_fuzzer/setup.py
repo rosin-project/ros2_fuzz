@@ -1,7 +1,11 @@
 import setuptools
+import os
 
-with open("README.md", "r", encoding="utf-8") as fh:
-    long_description = fh.read()
+try:
+    with open("../README.md", "r", encoding="utf-8") as fh:
+        long_description = fh.read()
+except:
+    long_description = ""
 
 setuptools.setup(
     name="ros2_automatic_fuzzer-jnxf",
@@ -13,7 +17,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/JnxF/automatic_fuzzing",
     packages=setuptools.find_packages(),
-    install_requires=["Jinja2", "yamale"],
+    install_requires=["Jinja2", "yamale", "PyInquirer"],
     entry_points={
         "console_scripts": [
             "auto_detector=auto_detector.__main__:main",

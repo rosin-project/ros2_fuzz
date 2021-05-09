@@ -79,7 +79,9 @@ class FuzzTargetProcessor:
         res += preindent + f"{parent}->{field.name} = {fresh};\n"
         return res
 
-    def process(self, t: ROSType, headers_file: str, original_file: str) -> FuzzTarget:
+    def process(
+        self, t: ROSType, headers_file: str, original_file: str, ros_type_str: str
+    ) -> FuzzTarget:
         logging.debug(f"Processing {t.type_name} type")
         imports = "\n".join(
             [
@@ -93,5 +95,5 @@ class FuzzTargetProcessor:
             imports=imports,
             client_name=FuzzTargetProcessor.normalize_client_name(t.type_name),
             request_code=request_code,
-            node_type="tutorial_interfaces::srv::AddThreeInts",
+            node_type=ros_type_str,
         )
