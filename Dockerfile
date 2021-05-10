@@ -30,6 +30,10 @@ COPY ./example_packages/parameters_example_package src/parameters_example_packag
 COPY ./example_packages/cpp_parameters src/cpp_parameters/
 COPY ./example_packages/publisher_subscriber_example src/publisher_subscriber_example/
 
+# Actions
+COPY ./example_packages/action_tutorials_interfaces src/action_tutorials_interfaces/
+COPY ./example_packages/action_tutorials_cpp src/action_tutorials_cpp/
+
 COPY ./example_packages/example_fuzz.yaml ./fuzz.yaml
 # COPY ./example_packages/geometry2 src/geometry2/
 
