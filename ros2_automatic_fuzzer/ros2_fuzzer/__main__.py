@@ -1,8 +1,9 @@
 import sys
 import argparse
-import logging
 import os
-import logging
+
+from zenlog import log as logging
+from logging import INFO, DEBUG
 
 sys.path.append("..")
 
@@ -26,7 +27,7 @@ def usage() -> str:
 
     args = parser.parse_args()
     path = args.path if args.path else os.getcwd()
-    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO)
+    logging.level(DEBUG if args.verbose else INFO)
 
     return path
 

@@ -1,5 +1,5 @@
 import os
-import logging
+from zenlog import log as logging
 from PyInquirer import Separator, prompt
 
 

@@ -1,5 +1,9 @@
 import os
-import logging
+
+from zenlog import log as logging
+from logging import INFO, DEBUG
+
+
 import argparse
 
 from .find_yaml_components import find_yaml_components
@@ -23,7 +27,7 @@ def usage():
 
     args = parser.parse_args()
     path = args.path if args.path else os.getcwd()
-    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO)
+    logging.level(DEBUG if args.verbose else INFO)
 
     return path, args.overwrite
 

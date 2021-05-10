@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import logging
+from zenlog import log as logging
 import re
 
 from .type_parser import Field, ROSType

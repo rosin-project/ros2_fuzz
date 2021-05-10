@@ -1,5 +1,5 @@
 import os
-import logging
+from zenlog import log as logging
 import re
 import yaml
 

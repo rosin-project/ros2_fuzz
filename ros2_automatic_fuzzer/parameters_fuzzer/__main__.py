@@ -1,5 +1,7 @@
 import argparse
-import logging
+from zenlog import log as logging
+from logging import INFO, DEBUG
+
 import os
 import re
 import signal
@@ -114,9 +116,8 @@ def main():
     executable_name = args.executable_name
     is_verbose = args.verbose
 
-    # Change logging
-    if is_verbose:
-        logging.basicConfig(level=logging.DEBUG)
+    # Change verbosity
+    logging.level(DEBUG if is_verbose else INFO)
 
     # 1. Get parameters
     parameters = get_parameters(

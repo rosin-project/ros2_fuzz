@@ -17,7 +17,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/JnxF/automatic_fuzzing",
     packages=setuptools.find_packages(),
-    install_requires=["Jinja2", "yamale", "PyInquirer"],
+    install_requires=["Jinja2", "yamale", "PyInquirer", "zenlog"],
     entry_points={
         "console_scripts": [
             "auto_detector=auto_detector.__main__:main",

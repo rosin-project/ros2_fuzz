@@ -1,5 +1,5 @@
 import os
-import logging
+from zenlog import log as logging
 from pathlib import Path
 from jinja2 import FileSystemLoader, Environment
 from .fuzzing_descriptor import FuzzTarget

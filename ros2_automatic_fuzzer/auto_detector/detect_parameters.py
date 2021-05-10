@@ -1,5 +1,5 @@
 import sys
-import logging
+from zenlog import log as logging
 import os
 from PyInquirer import prompt
 import yaml

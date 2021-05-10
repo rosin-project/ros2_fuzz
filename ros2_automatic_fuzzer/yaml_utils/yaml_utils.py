@@ -1,7 +1,7 @@
-import logging
+from zenlog import log as logging
 import os
 import json
-import logging
+from zenlog import log as logging
 import yamale
 
 
@@ -54,7 +54,11 @@ def read_and_validate_yaml_file(path: str) -> dict:
 
     services_keys = yaml_obj["services"].keys()
     topics_keys = yaml_obj["topics"].keys()
-    logging.debug(f"{len(services_keys)} services detected: {', '.join([f'`{s}`' for s in services_keys])}")
-    logging.debug(f"{len(topics_keys)} topics detected: {', '.join([f'`{s}`' for s in topics_keys])}")
+    logging.debug(
+        f"{len(services_keys)} services detected: {', '.join([f'`{s}`' for s in services_keys])}"
+    )
+    logging.debug(
+        f"{len(topics_keys)} topics detected: {', '.join([f'`{s}`' for s in topics_keys])}"
+    )
 
     return yaml_obj
