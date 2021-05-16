@@ -44,17 +44,25 @@ def main():
         is_topic = (name, value) in topics.items()
 
         if is_service:
-            logging.info(f"Creating fuzzer for service `{name}`")
-            generate_service_template(
+            destination_path = generate_service_template(
                 source=value["source"],
                 ros_type_str=value["type"],
                 headers_file=value["headers_file"],
             )
+            logging.info(f"{name}: created fuzzer for the service")
+            logging.info(f"└── {destination_path}")
 
         if is_topic:
-            logging.info(f"Creating fuzzer for topic `{name}`")
-            generate_topic_template(
+            destination_path = generate_topic_template(
                 source=value["source"],
                 ros_type_str=value["type"],
                 headers_file=value["headers_file"],
             )
+            logging.info(f"{name}: created fuzzer for the topic")
+            logging.info(f"└── {destination_path}")
+
+    logging.info("The fuzzer(s) have been generated successfully")
+    logging.warning("Please link the fuzzers to their CMakeLists.txt files,")
+    logging.warning(
+        "recompile the projects with instrumentalization and start the fuzzers."
+    )

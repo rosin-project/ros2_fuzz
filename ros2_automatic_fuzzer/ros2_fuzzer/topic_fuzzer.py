@@ -8,7 +8,7 @@ from ros2_fuzzer.fuzzing_utils.fuzzing_descriptor import FuzzTargetProcessor
 from ros2_fuzzer.fuzzing_utils.generate_cpp_file import generate_cpp_file
 
 
-def generate_topic_template(source: str, ros_type_str: str, headers_file: str):
+def generate_topic_template(source: str, ros_type_str: str, headers_file: str) -> str:
     original_file = os.path.basename(source)
     topic_name = ros_type_str.replace("::", "/")
     ros_type = TypeParser.parse_type(topic_name)
@@ -20,7 +20,7 @@ def generate_topic_template(source: str, ros_type_str: str, headers_file: str):
         ros_type_str=ros_type_str,
     )
 
-    generate_cpp_file(
+    return generate_cpp_file(
         fuzz_target=fuzz_target,
         source_file=source,
         template_name="topic_template.jinx.cpp",

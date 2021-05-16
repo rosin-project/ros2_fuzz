@@ -26,14 +26,14 @@ def generate_cpp_file(fuzz_target: FuzzTarget, source_file: str, template_name: 
     logging.debug("Template populated")
 
     # Write the populated file
+    full_path = os.path.join(
+        os.path.dirname(source_file), without_extension + "_generated.cpp"
+    )
     try:
-        with open(
-            os.path.join(
-                os.path.dirname(source_file), without_extension + "_generated.cpp"
-            ),
-            "w",
-        ) as fd:
+        with open(full_path, "w") as fd:
             fd.write(template)
-            logging.info(f"Template written with {fuzz_target.client_name} client")
+            logging.debug(f"Template written with {fuzz_target.client_name} client")
     except Exception:
         logging.error("Couldn't write generated file", exc_info=True)
+
+    return full_path
