@@ -52,13 +52,18 @@ def read_and_validate_yaml_file(path: str) -> dict:
             "Did you forget to fill in the blanks?"
         )
 
-    services_keys = yaml_obj["services"].keys()
-    topics_keys = yaml_obj["topics"].keys()
+    services_keys = (yaml_obj["services"] if "services" in yaml_obj else {}).keys()
+    topics_keys = (yaml_obj["topics"] if "topics" in yaml_obj else {}).keys()
+    actions_keys = (yaml_obj["actions"] if "actions" in yaml_obj else {}).keys()
+
+    logging.debug(
+        f"{len(topics_keys)} topics detected: {', '.join([f'`{s}`' for s in topics_keys])}"
+    )
     logging.debug(
         f"{len(services_keys)} services detected: {', '.join([f'`{s}`' for s in services_keys])}"
     )
     logging.debug(
-        f"{len(topics_keys)} topics detected: {', '.join([f'`{s}`' for s in topics_keys])}"
+        f"{len(actions_keys)} actions detected: {', '.join([f'`{s}`' for s in actions_keys])}"
     )
 
     return yaml_obj

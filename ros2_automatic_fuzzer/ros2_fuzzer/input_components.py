@@ -28,11 +28,12 @@ def component_options(components: dict):
     ]
 
 
-def ask_for_components(services: dict, topics: dict):
+def ask_for_components(services: dict, topics: dict, actions: dict):
     services_choices = component_options(services)
     topics_choices = component_options(topics)
+    actions_choices = component_options(actions)
 
-    all_choices = services_choices + topics_choices
+    all_choices = services_choices + topics_choices + actions_choices
 
     there_are_valid_choices = any("disabled" not in choice for choice in all_choices)
     if not there_are_valid_choices:
@@ -47,6 +48,8 @@ def ask_for_components(services: dict, topics: dict):
         *topics_choices,
         Separator("Services"),
         *services_choices,
+        Separator("Actions"),
+        *actions_choices,
     ]
 
     questions = [

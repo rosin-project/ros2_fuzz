@@ -1,16 +1,24 @@
-services: map(include('service'))
-topics: map(include('topic'))
+services: map(include('service'), required=False, none=False)
+topics: map(include('topic'), required=False, none=False)
+actions: map(include('action'), required=False, none=False)
 ---
 service:
   headers_file: str(none=False)
-  node_name: str(none=False)
+  node_name: str(none=False, required=False)
   parameters: list(map(str(), num()))
   source: str(none=False)
   type: str(none=False)
 
 topic:
   headers_file: str(none=False)
-  node_name: str(none=False)
+  node_name: str(none=False, required=False)
+  parameters: list(map(str(), num()))
+  source: str(none=False)
+  type: str(none=False)
+
+action:
+  headers_file: str(none=False)
+  node_name: str(none=False, required=False)
   parameters: list(map(str(), num()))
   source: str(none=False)
   type: str(none=False)

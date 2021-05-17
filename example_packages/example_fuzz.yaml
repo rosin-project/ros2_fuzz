@@ -1,13 +1,11 @@
 topics:
   minimal_topic:
     headers_file: std_msgs/msg/string.hpp
-    node_name: TODO
     source: src/publisher_subscriber_example/src/publisher_member_function.cpp
     type: std_msgs::msg::String
     parameters: []
   topic:
     headers_file: std_msgs/msg/string.hpp
-    node_name: TODO
     source: src/parameters_example_package/src/fuzz_target.cpp
     type: std_msgs::msg::String
     parameters: []
@@ -20,7 +18,6 @@ services:
     parameters: []
   add_three_ints:
     headers_file: tutorial_interfaces/srv/add_three_ints.hpp
-    node_name: TODO
     source: src/client_service_example/src/add_three_ints_server.cpp
     type: tutorial_interfaces::srv::AddThreeInts
     parameters: []

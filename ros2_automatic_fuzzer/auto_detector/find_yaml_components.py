@@ -20,8 +20,6 @@ def find_yaml_components(rootDir: str, overwrite: bool) -> None:
                 cppfiles.append(os.path.join(dirName, fname))
 
     logging.debug(f"Logged {len(cppfiles)} .cpp files")
-    for file in cppfiles:
-        logging.debug(f"\t {file}")
 
     # Catches expressions of the type create_publisher<A>("B"
     # being A the type being catched, and B the name of the service
@@ -35,24 +33,40 @@ def find_yaml_components(rootDir: str, overwrite: bool) -> None:
         r"create_service\s*<\s*(?P<type>[^>]+)\s*>\s*\(\s*\"(?P<name>[^\"]+)\""
     )
 
+    # Catches expressions of the type create_server<A>(..., "B")
+    # being A the type being catched, and B the name of the server
+    create_action_regex = (
+        r"create_server\s*<\s*(?P<type>[^>]+)\s*>\s*\(\s*[^,]+,\s*\"(?P<name>[^\"]+)\""
+    )
+
     logging.debug("Checking file contents")
     found_publishers = dict()
     found_services = dict()
+    found_actions = dict()
+
+    finding_patterns = [
+        (create_publisher_regex, found_publishers),
+        (create_service_regex, found_services),
+        (create_action_regex, found_actions),
+    ]
+
     for filepath in cppfiles:
         try:
             with open(filepath) as f:
                 contents = f.read()
-                for (regex, container) in [
-                    (create_publisher_regex, found_publishers),
-                    (create_service_regex, found_services),
-                ]:
+                for (regex, container) in finding_patterns:
                     instance = re.search(regex, contents)
                     if instance:
+                        logging.debug(f"Found instance at {filepath}")
+
+                        name = instance.group("name")
                         type = instance.group("type")
 
-                        container[instance.group("name")] = {
+                        if "::" not in type:
+                            logging.warning(f"The `{type}` type may be incomplete")
+
+                        container[name] = {
                             "headers_file": map_type_to_headers_file(type),
-                            "node_name": "TODO",
                             "source": os.path.relpath(filepath, start=rootDir),
                             "type": type,
                             "parameters": [],
@@ -61,11 +75,19 @@ def find_yaml_components(rootDir: str, overwrite: bool) -> None:
             pass
 
     # Generate results
-    yaml_result = {"topics": found_publishers, "services": found_services}
+    yaml_result = {}
+    if found_publishers:
+        yaml_result["topics"] = found_publishers
 
-    if len(found_publishers) + len(found_services) == 0:
+    if found_services:
+        yaml_result["services"] = found_services
+
+    if found_actions:
+        yaml_result["actions"] = found_actions
+
+    if len(found_publishers) + len(found_services) + len(found_actions) == 0:
         logging.error(
-            "No publisher nor service has been found\n"
+            "No component has been found\n"
             "Are you in (or have you provided) the correct path?"
         )
         exit(-1)
@@ -114,4 +136,7 @@ def map_type_to_headers_file(type: str) -> str:
         "std_msgs::msg::UInt64MultiArray": "u_int_64_multi_array",
     }
 
-    return ("std_msgs/msg/" + mapping[type] + ".hpp") if type in mapping else "TODO"
+    if type in mapping:
+        return "std_msgs/msg/" + mapping[type] + ".hpp"
+    else:
+        return "TODO"

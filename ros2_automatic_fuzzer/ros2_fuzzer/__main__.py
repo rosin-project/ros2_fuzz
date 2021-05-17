@@ -36,12 +36,16 @@ def main():
     path = usage()
     yaml_obj: dict = read_and_validate_yaml_file(path)
 
-    services: dict = yaml_obj["services"]
-    topics: dict = yaml_obj["topics"]
+    services: dict = yaml_obj["services"] if "services" in yaml_obj else {}
+    topics: dict = yaml_obj["topics"] if "topics" in yaml_obj else {}
+    actions: dict = yaml_obj["actions"] if "actions" in yaml_obj else {}
 
-    for (name, value) in ask_for_components(services=services, topics=topics):
+    for (name, value) in ask_for_components(
+        services=services, topics=topics, actions=actions
+    ):
         is_service = (name, value) in services.items()
         is_topic = (name, value) in topics.items()
+        is_action = (name, value) in actions.items()
 
         if is_service:
             destination_path = generate_service_template(
@@ -52,7 +56,7 @@ def main():
             logging.info(f"{name}: created fuzzer for the service")
             logging.info(f"└── {destination_path}")
 
-        if is_topic:
+        elif is_topic:
             destination_path = generate_topic_template(
                 source=value["source"],
                 ros_type_str=value["type"],
@@ -61,7 +65,11 @@ def main():
             logging.info(f"{name}: created fuzzer for the topic")
             logging.info(f"└── {destination_path}")
 
-    logging.info("The fuzzer(s) have been generated successfully")
+        elif is_action:
+            # TODO
+            pass
+
+    logging.info("Fuzzer(s) generated successfully")
     logging.warning("Please link the fuzzers to their CMakeLists.txt files,")
     logging.warning(
         "recompile the projects with instrumentalization and start the fuzzers."
