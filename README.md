@@ -8,11 +8,11 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/JnxF/automatic_fuzzing.svg)](https://GitHub.com/JnxF/automatic_fuzzing/graphs/contributors/)
 [![GitHub license](http://img.shields.io/github/license/JnxF/automatic_fuzzing.svg)](https://github.com/JnxF/automatic_fuzzing/blob/master/LICENSE)
 
-An automatic fuzzing tool for ROS 2 C++ projects.
+An automatic fuzzing tool for ROS 2 C++ projects. The tool comprises two different commands: `auto_detector` and `ros2_fuzzer`.
 
 ## Installation
 
-TODO
+TODO (pending to be published at pip). Meanwhile execute `pip install .` at the ros2_automatic_fuzzer folder.
 
 ```bash
 pip install ros2_fuzzer
@@ -20,79 +20,141 @@ pip install ros2_fuzzer
 
 ## Usage
 
-The tool comprises two different commands: `auto_detector` and `ros2_fuzzer`:
-
 1. Navigate to your ROS working space.
 2. Run `auto_detector`. This generates a `fuzz.yaml` file with `TODO` gaps.
-3. Fill the missing `TODO`s in the `fuzz.yaml` file accordingly.
-4. Run `ros2_fuzzer` and follow the steps.
+3. Fill the missing `TODO`s in the `fuzz.yaml` file and complete it.
+4. Run `ros2_fuzzer` and follow the instructions.
+5. Add the generated fuzzers to their CMakeLists.txt.
+6. Make a clean build with the `CC` and `CXX` environment variables pointing to AFL.
+7. Run the AFL fuzzers.
 
-## YAML format
+Check the following sections for detailed instructions for each step.
 
-The `fuzz.yaml` file contains descriptions for topics, services and action servers.
+### Step 2. The `auto_detector` command
 
-Some of the fields can be automatically extracted from the code, but others must be manually introduced. The blanks are marked with the `TODO` keyword.
+The `auto_detector` command generates a YAML file called `fuzz.yaml` which contains descriptions for three types of artifacts: topics, services, and action servers. The detection process relies on regular expressions in C++, and therefore it is not bullet-proof.
 
-Follows a concrete example. The used syntax follows [the YAML schema](ros2_automatic_fuzzer/yaml_utils/schema.yaml), which the `fuzz.yaml` file conforms to.
+Optional arguments:
+* `--path PATH`. The path where to search for ROS artifacts. By default it is the working directory. 
 
-TODO
+Optional flags:
+* `-f` or `--overwrite` to force overwriting the file.
+* `-v` or `--verbose` to increase the output verbosity.
+
+Typical bash invocation:
+```bash
+auto_detector
+```
+
+### Step 3. The YAML format
+
+The `fuzz.yaml` file contains descriptions for topics, services, and action servers. Some of the fields can be automatically extracted in the previous step thanks to the `auto_detector` command, but others must be manually introduced. There may be `TODO` blanks that must be filled.
+
+The format is simple: there are three optional categories: `topics`, `services` and `actions`. Each of those is a dictionary, with the keys being the name of the artifact. Each artifact contains the following descriptors:
+
+* `headers_file` (compulsory). A string pointing to the `hpp` file where the type of the artifact is defined (the topic type, the service type, or the action type). Sometimes it can be directly inferred.
+* `source` (compulsory). A relative path to the `fuzz.yaml` file where the artifact to be fuzzed is located. It must be a C++ source code file.
+* `type` (compulsory). The type of the fuzzed artifact. It must conform to the `ros2 interface show` syntax. That is, with `::` as a separator and providing the full type. Correct examples are `example_interfaces::srv::AddTwoInts` and `std_msgs::msg::String`, but not `example_interfaces/srv/AddTwoInts` nor `String`.
+* `parameters` (optional). A list with all the parameters of the artifact. It can be inferred with the `auto_detector` command.
+
+Follows a concrete example. You can also check the syntax that is followed in [the YAML schema](ros2_automatic_fuzzer/yaml_utils/schema.yaml), which all `fuzz.yaml` files must conform to.
 
 ```yaml
 topics:
+  minimal_topic:
+    headers_file: std_msgs/msg/string.hpp
+    source: src/publisher_subscriber_example/src/publisher_member_function.cpp
+    type: std_msgs::msg::String
+    parameters: []
   topic:
-    headers_file: TODO
-    node_name: TODO
+    headers_file: std_msgs/msg/string.hpp
     source: src/parameters_example_package/src/fuzz_target.cpp
     type: std_msgs::msg::String
     parameters: []
 services:
   add_two_ints:
-    headers_file: TODO
-    node_name: TODO
+    headers_file: example_interfaces/srv/add_two_ints.hpp
+    node_name: minimal_subscriber
     source: src/parameters_example_package/src/add_two_ints_server.cpp
     type: example_interfaces::srv::AddTwoInts
     parameters: []
   add_three_ints:
     headers_file: tutorial_interfaces/srv/add_three_ints.hpp
-    node_name: TODO
-    source: src/automatic_fuzzing/src/add_three_ints_server.cpp
+    source: src/client_service_example/src/add_three_ints_server.cpp
     type: tutorial_interfaces::srv::AddThreeInts
     parameters: []
 ```
 
-## CLIs
+### Step 4. The `ros2_fuzzer` command
 
-### `auto_detector`
+It consumes the `fuzz.yaml` file to generate C++ fuzzers for the selected artifacts. It allows generating fuzzers for all or some of them. Simply follow the steps on the screen. It may require calling `ros2 interface show`, and thus sourcing the ROS setup bash (with `. install/setup.bash`) may be required.
 
-TODO
+Optional arguments:
+* `--path PATH`. The path where to search for a `fuzz.yaml` file. By default it is on the working directory. 
 
+Optional flags:
+* `-v` or `--verbose` to increase the output verbosity.
+
+Typical bash invocation:
 ```bash
-usage: auto_detector [-h] [--path PATH] [-f] [-v]
-
-Automatic C++ ROS 2 components finder
-
-optional arguments:
-  -h, --help       show this help message and exit
-  --path PATH      path to search for ROS artifacts (default = the working
-                   directory)
-  -f, --overwrite  forces overwrite
-  -v, --verbose    increase output verbosity
+ros2_fuzzer
 ```
 
-### `ros2_fuzzer`
+### Step 5. Adding the fuzzers to the `CMakeLists.txt` files
+The `ros2_fuzzer` command generates files of the `*_generated.cpp` form, which have to be linked to their `CMakeList.txt` files to be compiled.
 
-TODO
+For example, for the following `fuzz.yaml` file:
+```yaml
+services:
+  add_three_ints:
+    headers_file: tutorial_interfaces/srv/add_three_ints.hpp
+    source: src/client_service_example/src/add_three_ints_server.cpp
+    type: tutorial_interfaces::srv::AddThreeInts
+    parameters: []
+```
+
+The following code can be added into its `CMakeLists.txt` file (the `generated_fuzzer` keyword can be changed):
+
+```cmake
+add_executable(generated_fuzzer src/add_three_ints_server_generated.cpp)
+ament_target_dependencies(generated_fuzzer rclcpp tutorial_interfaces) 
+install(TARGETS generated_fuzzer DESTINATION lib/${PROJECT_NAME})
+```
+
+### Step 6. Rebuilding with AFL
+To fuzz your C++ artifacts, it is necessary to recompile the projects so that they include instrumentalization annotations on the byte code to be used in the fuzzing search. We have decided to use [AFL](https://github.com/google/AFL), an state-of-the-art fuzzer backed by Google.
+
+If you haven't done so, you can install AFL with
 
 ```bash
-usage: ros2_fuzzer [-h] [--path PATH] [-v]
-
-ROS 2 automatic fuzzer
-
-optional arguments:
-  -h, --help     show this help message and exit
-  --path PATH    Path where the fuzz.yaml file is located
-  -v, --verbose  increase output verbosity
+apt install afl
 ```
+
+To use it, set the `CC` and `CXX` environment variables to point to AFL and build the projects. We add the `--cmake-clean-cache` flag to prevent stale build files. Of course, you can use a more sofisticated way to build your projects, but make sure that the AFL's instrumentalization takes place.
+
+```bash
+export CC=afl-gcc 
+export CXX=afl-g++
+colcon build --cmake-clean-cache
+```
+
+### Step 7. Running the fuzzers
+Navigate to `install/<package>/lib/<package>/`, where `<package>` is the name of your ROS package (or wherever the installation files are placed) and start the fuzzing search.
+
+The command requires an `inputs/` folder, with some files with content. You can use random values extracted from `/dev/urandom`, for instance:
+
+```bash
+mkdir inputs
+head -c 50 /dev/urandom > inputs/input0.txt
+```
+
+Now execute the `afl-fuzz` command (from AFL). Use the name of the executable found in that folder (try an `ls`) as the last parameter. The example shown in step #5 would be fuzzed with the following command:
+
+```bash
+afl-fuzz -i inputs/ -o outputs/ -m none -- ./generated_fuzzer
+```
+
+You should just change the `generated_fuzzer` execution file to yours to make AFL work.
 
 ## License
 
