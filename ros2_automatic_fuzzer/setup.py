@@ -15,7 +15,7 @@ setuptools.setup(
     description="An automatic ROS 2 fuzzer for C++ nodes",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/JnxF/automatic_fuzzing",
+    url="https://github.com/rosin-project/ros2_fuzz",
     packages=setuptools.find_packages(),
     install_requires=["Jinja2", "yamale", "PyInquirer", "zenlog"],
     entry_points={

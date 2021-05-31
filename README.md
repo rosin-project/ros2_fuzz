@@ -1,22 +1,24 @@
 # Automatic fuzzing for ROS 2
 
-![Python tests](https://github.com/JnxF/automatic_fuzzing/workflows/Python%20tests/badge.svg)
+![Python tests](https://github.com/rosin-project/ros2_fuzz/workflows/Python%20tests/badge.svg)
 ![Hits](https://visitor-badge.glitch.me/badge?page_id=jnxf._automatic_fuzzing)
-[![GitHub stars](https://img.shields.io/github/stars/JnxF/automatic_fuzzing.svg)](https://GitHub.com/JnxF/automatic_fuzzing/stargazers/)
-[![GitHub forks](https://img.shields.io/github/forks/JnxF/automatic_fuzzing.svg)](https://GitHub.com/JnxF/automatic_fuzzing/network/)
-[![GitHub repo size in bytes](https://img.shields.io/github/repo-size/JnxF/automatic_fuzzing.svg)](https://github.com/JnxF/automatic_fuzzing)
-[![GitHub contributors](https://img.shields.io/github/contributors/JnxF/automatic_fuzzing.svg)](https://GitHub.com/JnxF/automatic_fuzzing/graphs/contributors/)
-[![GitHub license](http://img.shields.io/github/license/JnxF/automatic_fuzzing.svg)](https://github.com/JnxF/automatic_fuzzing/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/rosin-project/ros2_fuzz.svg)](https://GitHub.com/rosin-project/ros2_fuzz/stargazers/)
+[![GitHub forks](https://img.shields.io/github/forks/rosin-project/ros2_fuzz.svg)](https://GitHub.com/rosin-project/ros2_fuzz/network/)
+[![GitHub repo size in bytes](https://img.shields.io/github/repo-size/rosin-project/ros2_fuzz.svg)](https://github.com/rosin-project/ros2_fuzz)
+[![GitHub contributors](https://img.shields.io/github/contributors/rosin-project/ros2_fuzz.svg)](https://GitHub.com/rosin-project/ros2_fuzz/graphs/contributors/)
+[![GitHub license](http://img.shields.io/github/license/rosin-project/ros2_fuzz.svg)](https://github.com/rosin-project/ros2_fuzz/blob/master/LICENSE)
 
 An automatic fuzzing tool for ROS 2 C++ projects. The tool comprises two different commands: `auto_detector` and `ros2_fuzzer`.
 
 ## Installation
 
-TODO (pending to be published at pip). Meanwhile execute `pip install .` at the ros2_automatic_fuzzer folder.
+Install the `ros_automatic_fuzzer` folder with pip:
 
 ```bash
-pip install ros2_fuzzer
+pip3 install -e ros2_automatic_fuzzer
 ```
+
+Alternatively, start the `start.sh` command, which spawn a Docker container with both the examples and the tool.
 
 ## Usage
 
@@ -35,13 +37,16 @@ Check the following sections for detailed instructions for each step.
 The `auto_detector` command generates a YAML file called `fuzz.yaml` which contains descriptions for three types of artifacts: topics, services, and action servers. The detection process relies on regular expressions in C++, and therefore it is not bullet-proof.
 
 Optional arguments:
-* `--path PATH`. The path where to search for ROS artifacts. By default it is the working directory. 
+
+- `--path PATH`. The path where to search for ROS artifacts. By default it is the working directory.
 
 Optional flags:
-* `-f` or `--overwrite` to force overwriting the file.
-* `-v` or `--verbose` to increase the output verbosity.
+
+- `-f` or `--overwrite` to force overwriting the file.
+- `-v` or `--verbose` to increase the output verbosity.
 
 Typical bash invocation:
+
 ```bash
 auto_detector
 ```
@@ -52,10 +57,10 @@ The `fuzz.yaml` file contains descriptions for topics, services, and action serv
 
 The format is simple: there are three optional categories: `topics`, `services` and `actions`. Each of those is a dictionary, with the keys being the name of the artifact. Each artifact contains the following descriptors:
 
-* `headers_file` (compulsory). A string pointing to the `hpp` file where the type of the artifact is defined (the topic type, the service type, or the action type). Sometimes it can be directly inferred.
-* `source` (compulsory). A relative path to the `fuzz.yaml` file where the artifact to be fuzzed is located. It must be a C++ source code file.
-* `type` (compulsory). The type of the fuzzed artifact. It must conform to the `ros2 interface show` syntax. That is, with `::` as a separator and providing the full type. Correct examples are `example_interfaces::srv::AddTwoInts` and `std_msgs::msg::String`, but not `example_interfaces/srv/AddTwoInts` nor `String`.
-* `parameters` (optional). A list with all the parameters of the artifact. It can be inferred with the `auto_detector` command.
+- `headers_file` (compulsory). A string pointing to the `hpp` file where the type of the artifact is defined (the topic type, the service type, or the action type). Sometimes it can be directly inferred.
+- `source` (compulsory). A relative path to the `fuzz.yaml` file where the artifact to be fuzzed is located. It must be a C++ source code file.
+- `type` (compulsory). The type of the fuzzed artifact. It must conform to the `ros2 interface show` syntax. That is, with `::` as a separator and providing the full type. Correct examples are `example_interfaces::srv::AddTwoInts` and `std_msgs::msg::String`, but not `example_interfaces/srv/AddTwoInts` nor `String`.
+- `parameters` (optional). A list with all the parameters of the artifact. It can be inferred with the `auto_detector` command.
 
 Follows a concrete example. You can also check the syntax that is followed in [the YAML schema](ros2_automatic_fuzzer/yaml_utils/schema.yaml), which all `fuzz.yaml` files must conform to.
 
@@ -90,20 +95,25 @@ services:
 It consumes the `fuzz.yaml` file to generate C++ fuzzers for the selected artifacts. It allows generating fuzzers for all or some of them. Simply follow the steps on the screen. It may require calling `ros2 interface show`, and thus sourcing the ROS setup bash (with `. install/setup.bash`) may be required.
 
 Optional arguments:
-* `--path PATH`. The path where to search for a `fuzz.yaml` file. By default it is on the working directory. 
+
+- `--path PATH`. The path where to search for a `fuzz.yaml` file. By default it is on the working directory.
 
 Optional flags:
-* `-v` or `--verbose` to increase the output verbosity.
+
+- `-v` or `--verbose` to increase the output verbosity.
 
 Typical bash invocation:
+
 ```bash
 ros2_fuzzer
 ```
 
 ### Step 5. Adding the fuzzers to the `CMakeLists.txt` files
+
 The `ros2_fuzzer` command generates files of the `*_generated.cpp` form, which have to be linked to their `CMakeList.txt` files to be compiled.
 
 For example, for the following `fuzz.yaml` file:
+
 ```yaml
 services:
   add_three_ints:
@@ -117,11 +127,12 @@ The following code can be added into its `CMakeLists.txt` file (the `generated_f
 
 ```cmake
 add_executable(generated_fuzzer src/add_three_ints_server_generated.cpp)
-ament_target_dependencies(generated_fuzzer rclcpp tutorial_interfaces) 
+ament_target_dependencies(generated_fuzzer rclcpp tutorial_interfaces)
 install(TARGETS generated_fuzzer DESTINATION lib/${PROJECT_NAME})
 ```
 
 ### Step 6. Rebuilding with AFL
+
 To fuzz your C++ artifacts, it is necessary to recompile the projects so that they include instrumentalization annotations on the byte code to be used in the fuzzing search. We have decided to use [AFL](https://github.com/google/AFL), an state-of-the-art fuzzer backed by Google.
 
 If you haven't done so, you can install AFL with
@@ -133,12 +144,13 @@ apt install afl
 To use it, set the `CC` and `CXX` environment variables to point to AFL and build the projects. We add the `--cmake-clean-cache` flag to prevent stale build files. Of course, you can use a more sofisticated way to build your projects, but make sure that the AFL's instrumentalization takes place.
 
 ```bash
-export CC=afl-gcc 
+export CC=afl-gcc
 export CXX=afl-g++
 colcon build --cmake-clean-cache
 ```
 
 ### Step 7. Running the fuzzers
+
 Navigate to `install/<package>/lib/<package>/`, where `<package>` is the name of your ROS package (or wherever the installation files are placed) and start the fuzzing search.
 
 The command requires an `inputs/` folder, with some files with content. You can use random values extracted from `/dev/urandom`, for instance:
