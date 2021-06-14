@@ -22,7 +22,6 @@ setuptools.setup(
         "console_scripts": [
             "auto_detector=auto_detector.__main__:main",
             "ros2_fuzzer=ros2_fuzzer.__main__:main",
-            "topic_fuzzer=topic_fuzzer.__main__:main",
             "parameters_fuzzer=parameters_fuzzer.__main__:main",
         ],
     },
