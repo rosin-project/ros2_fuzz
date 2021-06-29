@@ -8,7 +8,7 @@ import yamale
 def ensure_yaml_exists(yaml_file_path: str) -> bool:
     if not os.path.exists(yaml_file_path):
         logging.error(
-            "No fuzz.yaml file was found\n" "Have you run the auto_detecter command?"
+            "No fuzz.yaml file was found\n" "Have you run the auto_detector command?"
         )
         exit(-1)
     logging.debug(f"YAML file found at {yaml_file_path}")

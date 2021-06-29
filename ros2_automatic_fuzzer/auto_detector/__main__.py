@@ -16,7 +16,8 @@ def usage():
     )
     parser.add_argument(
         "--path",
-        help="path to search for ROS artifacts (default = the working directory)",
+        help="path to search for ROS artifacts and where to generate the fuzz.yaml file. "
+        "By default it is the working directory",
     )
     parser.add_argument(
         "-f", "--overwrite", help="forces overwrite", action="store_true"
