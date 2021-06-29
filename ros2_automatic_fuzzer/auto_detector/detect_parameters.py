@@ -37,7 +37,7 @@ def detect_parameters(rootDir: str):
             # TODO
             pass
 
-    for topic_name, topic_value in services.items():
+    for topic_name, topic_value in topics.items():
         if yes_no_question(f"Detect parameters for topic `{topic_name}`?", False):
             # TODO
             pass
