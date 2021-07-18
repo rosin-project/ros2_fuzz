@@ -30,18 +30,18 @@ using namespace std;
 {{ REQUEST_CODE }}
 */
 
-class MinimalPublisher : public rclcpp::Node
+class FuzzerPublisher : public rclcpp::Node
 {
 public:
-	MinimalPublisher(int parent_pid)
+	FuzzerPublisher(int parent_pid)
 	: Node("fuzzer__publisher_"), parent_pid_(parent_pid)
 	{
 		RCLCPP_INFO(this->get_logger(), "Started publisher from fuzz_target");
 		publisher_ = this->create_publisher<std_msgs::msg::String>("{{ CLIENT_NAME }}", 10);
 		timerTimeout_ = this->create_wall_timer(
-			10000ms, std::bind(&MinimalPublisher::timer_timeout, this));
+			10000ms, std::bind(&FuzzerPublisher::timer_timeout, this));
 		timer_ = this->create_wall_timer(
-			1ms, std::bind(&MinimalPublisher::timer_callback, this));
+			1ms, std::bind(&FuzzerPublisher::timer_callback, this));
 	}
 
 private:
@@ -117,7 +117,7 @@ static void fuzz_target(int argc, char* argv[], pid_t parent_pid)
 {
 	std::cout << "Fuzzer started" << std::endl;
 	rclcpp::init(argc, argv);
-	rclcpp::spin(std::make_shared<MinimalPublisher>(parent_pid));
+	rclcpp::spin(std::make_shared<FuzzerPublisher>(parent_pid));
 	rclcpp::shutdown();
 }
 
